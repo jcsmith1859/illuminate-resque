@@ -1,34 +1,23 @@
 <?php namespace Resque\ServiceProviders;
 
-use Config;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\ServiceProvider;
 use Resque\Connectors\ResqueConnector;
 use Resque\Console\ListenCommand;
-use Illuminate\Queue\QueueServiceProvider;
 
 /**
  * Class ResqueServiceProvider
  *
  * @package Resque\ServiceProviders
  */
-class ResqueServiceProvider extends QueueServiceProvider {
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function registerConnectors($manager)
-	{
-		parent::registerConnectors($manager);
-		$this->registerResqueConnector($manager);
-	}
+class ResqueServiceProvider extends ServiceProvider {
 
 	/**
 	 * {@inheritdoc}
 	 */
 	public function boot()
 	{
-		parent::boot();
-
-		$this->registerCommand();
+		$this->registerResqueConnector($this->app['queue']);
 	}
 
 	/**
@@ -39,22 +28,10 @@ class ResqueServiceProvider extends QueueServiceProvider {
 	 */
 	protected function registerResqueConnector($manager)
 	{
-		$connections = Config::get('queue.connections', []);
-		foreach ($connections as $connection)
-		{
-			if ($connection['driver'] !== 'resque')
-			{
-				$manager->addConnector($connection['driver'], function ()
-				{
-					return new ResqueConnector();
-				});
-			}
-		}
-
 		$manager->addConnector('resque', function ()
 		{
-			$config = Config::get('database.redis.default');
-			Config::set('queue.connections.resque', array_merge($config, ['driver' => 'resque']));
+			$config = config('database.redis.default');
+			config(['queue.connections.resque' => array_merge($config, ['driver' => 'resque'])]);
 
 			return new ResqueConnector;
 		});
@@ -67,12 +44,18 @@ class ResqueServiceProvider extends QueueServiceProvider {
 	 */
 	protected function registerCommand()
 	{
-		$this->app['command.resque.listen'] = $this->app->share(function ($app)
-		{
+		$this->app->singleton('command.resque.listen', function () {
 			return new ListenCommand;
 		});
-
-		$this->commands('command.resque.listen');
 	}
 
+	/**
+	 * Register the service provider.
+	 *
+	 * @return void
+	 */
+	public function register()
+	{
+		$this->registerCommand();
+	}
 } // End ResqueServiceProvider

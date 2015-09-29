@@ -1,6 +1,6 @@
 <?php namespace Resque\Connectors;
 
-use Config;
+use Illuminate\Support\Facades\Config;
 use Resque;
 use ResqueScheduler;
 use Resque\ResqueQueue;
@@ -46,7 +46,7 @@ class ResqueConnector implements ConnectorInterface {
 			$config['prefix'] = 'resque';
 		}
 
-		Resque::setBackend($config['host'].':'.$config['port'], $config['database'], $config['prefix'], (isset($config['password']) ? $config['password'] : null));
+		Resque::setBackend($config['host'].':'.$config['port'], $config['database'], $config['prefix']);
 
 		return new ResqueQueue;
 	}
