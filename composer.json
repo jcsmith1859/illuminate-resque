@@ -9,6 +9,12 @@
       "email": "jcsmith1859@gmail.com"
     }
   ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/php-resque/resque"
+    }
+  ],
   "require": {
     "php": ">=5.4.0",
     "illuminate/queue": "5.2.*",
