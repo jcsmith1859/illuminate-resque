@@ -5,32 +5,21 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "Andrew Ellis",
-      "email": "awellis@me.com"
-    },
-    {
-      "name": "Matt Thompson",
-      "email": "whatknight@ymail.com"
-    },
-    {
-      "name": "David Cook",
-      "email": "dcook@deedod.com"
-    },
-    {
       "name": "Jared Smith",
       "email": "jcsmith1859@gmail.com"
     }
   ],
   "require": {
     "php": ">=5.4.0",
-    "kamisama/php-resque-ex": "1.*"
+    "illuminate/queue": "5.2.*",
+    "php-resque/resque": "dev-master"
   },
   "suggest": {
     "kamisama/php-resque-scheduler": "Enables the use of the ResqueScheduler functionality."
   },
   "autoload": {
     "psr-4": {
-      "Resque\\": "src/Resque/"
+      "Illuminate\\": "src/Illuminate/"
     }
   },
   "minimum-stability": "stable"
